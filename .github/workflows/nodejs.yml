@@ -27,3 +27,22 @@ jobs:
         npm test
       env:
         CI: true
+    - uses: actions/upload-artifact@master
+      with:
+        name: dist
+        path: dist/
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/download-artifact@master
+        with:
+          name: dist
+          path: dist/
+      - run: |
+          git add dist/
+          git commit -m 'Built dist/'
+          git push
+        env:
+          CI: true
